@@ -1,0 +1,18 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using static model.TraineeModel;
+
+namespace manager
+{
+    public interface ITraineeService
+    {
+        IEnumerable<Trainee> GetAllTrainees();
+        Trainee GetTraineeById(int id);
+        void AddTrainee(Trainee trainee);
+        void UpdateTrainee(int id, Trainee trainee);
+        void DeleteTrainee(int id);
+    }
+}
