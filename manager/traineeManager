@@ -1,0 +1,62 @@
+using static model.TraineeModel;
+
+namespace manager
+{
+    public class TraineeManager : ITraineeService
+    {
+        private readonly List<Trainee> _trainees = new List<Trainee>
+        {
+            new Trainee { Id = 1, FirstName = "Bryan", LastName = "De Guzman", age = 19 },
+            new Trainee { Id = 2, FirstName = "Sheena", LastName = "Maria", age = 20 }
+        };
+
+        public IEnumerable<Trainee> GetAllTrainees()
+        {
+            return _trainees;
+        }
+
+        public Trainee GetTraineeById(int id)
+        {
+            return _trainees.FirstOrDefault(s => s.Id == id);
+        }
+
+        public void AddTrainee(Trainee trainee)
+        {
+            trainee.Id = _trainees.Max(s => s.Id) + 1;
+            _trainees.Add(trainee);
+        }
+
+        public void UpdateTrainee(int id, Trainee trainee)
+        {
+            var existingTrainee = _trainees.FirstOrDefault(s => s.Id == id);
+            if (existingTrainee != null)
+            {
+                existingTrainee.FirstName = trainee.FirstName;
+                existingTrainee.LastName = trainee.LastName;
+                existingTrainee.age = trainee.age;
+            }
+        }
+
+        public void DeleteTrainee(int id)
+        {
+            var trainee = _trainees.FirstOrDefault(s => s.Id == id);
+            if (trainee != null)
+            {
+                _trainees.Remove(trainee);
+            }
+        }
+
+      
+        public void UpdateTrainee(int id, (Trainee trainee, object extraData) updateInfo)
+        {
+            var existingTrainee = _trainees.FirstOrDefault(s => s.Id == id);
+            if (existingTrainee != null)
+            {
+                existingTrainee.FirstName = updateInfo.trainee.FirstName;
+                existingTrainee.LastName = updateInfo.trainee.LastName;
+                existingTrainee.age = updateInfo.trainee.age; 
+            }
+        }
+    }
+}
+
