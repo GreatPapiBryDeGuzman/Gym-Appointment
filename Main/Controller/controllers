@@ -1,0 +1,70 @@
+using manager; 
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using static model.TraineeModel;
+
+namespace Sample.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class TraineesController : ControllerBase
+    {
+        private readonly ITraineeService _traineeService;
+
+        
+        public TraineesController(ITraineeService traineeService)
+        {
+            _traineeService = traineeService;
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<Trainee>> GetTrainees()
+        {
+            var trainees = _traineeService.GetAllTrainees();
+            return Ok(trainees);
+        }
+
+        [HttpGet("{id}")]
+        public ActionResult<Trainee> GetTrainee(int id)
+        {
+            var trainee = _traineeService.GetTraineeById(id);
+            if (trainee == null)
+            {
+                return NotFound();
+            }
+            return Ok(trainee);
+        }
+
+        [HttpPost]
+        public ActionResult<Trainee> AddTrainee(Trainee trainee)
+        {
+            _traineeService.AddTrainee(trainee);
+            return CreatedAtAction(nameof(GetTrainee), new { id = trainee.Id }, trainee);
+        }
+
+        [HttpPut("{id}")]
+        public IActionResult UpdateTrainee(int id, Trainee trainee)
+        {
+            var existingTrainee = _traineeService.GetTraineeById(id);
+            if (existingTrainee == null)
+            {
+                return NotFound();
+            }
+            _traineeService.UpdateTrainee(id, trainee);
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteTrainee(int id)
+        {
+            var trainee = _traineeService.GetTraineeById(id);
+            if (trainee == null)
+            {
+                return NotFound();
+            }
+
+            _traineeService.DeleteTrainee(id);
+            return NoContent();
+        }
+    }
+}
